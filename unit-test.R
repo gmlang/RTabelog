@@ -8,7 +8,7 @@ r_path = "R"
 for (fname in list.files(r_path)) source(file.path(r_path, fname))
 
 # get URLs of resturants in Japanese
-shopURLs_ja = get_shopURLs_ja(city, pages = 1)
+shopURLs_ja = get_shopURLs_ja(city) # scrape all 60 pages and 1200 shops by default
 
 # convert to URLs in English, Simplified Chinese, Traditional Chinese and Korean
 languages = c("en", "cn", "tw", "kr")

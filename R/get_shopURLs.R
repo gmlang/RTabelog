@@ -12,7 +12,7 @@ get_shopURLs_ja = function(city = "osaka", pages = 1:60) {
 
         # scrape each page
         unlist(lapply(pages, function(i) {
-                # i = 1
+                cat("Page", i, "\n")
 
                 # construct API call and GET data
                 endURL = paste0(paste(baseURL,

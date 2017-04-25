@@ -11,9 +11,6 @@ names(lst_shopURLs) = languages
 lst_shopURLs$ja = shopURLs_ja
 
 # save
-output_path = "output"
-shopURLs_path = file.path(output_path, "shopURLs")
-dir.create(shopURLs_path, showWarnings = F, recursive = T)
 for (lang in names(lst_shopURLs))
         readr::write_rds(lst_shopURLs[[lang]],
                          file.path(shopURLs_path, paste0(lang, ".rds")))

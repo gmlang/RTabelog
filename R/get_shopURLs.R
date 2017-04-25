@@ -1,11 +1,14 @@
 get_shopURLs_ja = function(city = "osaka", pages = 1:60) {
-        # GETs and extracts URLs of restaurants listed on x pages for
-        #       the given city.
+        # GETs and extracts URLs of restaurants (sorted by descending rating)
+        #       listed on x pages for the given city.
         # Returns a character vector of URLs of sites in Japanese.
         #
         # city: string, city name
         # pages: integer vector, page range. In each city, Tabelog lists up to
         #       1200 shops and ends at page 60.
+
+        # print city
+        cat("City/Prefecture:", city, "\n")
 
         # construct base URL
         baseURL = paste("https://tabelog.com", city, sep = "/")

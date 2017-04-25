@@ -1,10 +1,10 @@
 # library(rvest)
 # library(RCurl)
 # library(httr)
-# 
+#
 # ## shops in Osaka
 # baseurl <- "http://tabelog.com/osaka/"
-# 
+#
 # ## get shops' IDs
 # pages <- 1:1 # set page range
 # shop_ids <- character()
@@ -91,7 +91,7 @@ contents2 <- mutate(contents2, gender = ifelse(grepl("男性",cat), "Men",
                                                ifelse(grepl("女性", cat), "Women", NA)),
                     age = ifelse(grepl("90", cat), "90's",ifelse(grepl("80", cat), "80's",
                                                                  ifelse(grepl("70", cat), "70's",
-                                                                        ifelse(grepl("60", cat), "60's", 
+                                                                        ifelse(grepl("60", cat), "60's",
                                                                                ifelse(grepl("50", cat), "50's",
                                                                                       ifelse(grepl("60", cat), "60's",
                                                                                              ifelse(grepl("50", cat), "50's",
@@ -146,11 +146,11 @@ contents2 <- mutate(contents2, gender = ifelse(grepl("男性",cat), "Men",
                                                                                                                                                                                                                                                                                                                                                ifelse(grepl("宮崎県", cat), "宮崎県",
                                                                                                                                                                                                                                                                                                                                                       ifelse(grepl("鹿児島県", cat), "鹿児島県",
                                                                                                                                                                                                                                                                                                                                                              ifelse(grepl("沖縄県", cat), "沖縄県", NA))))))))))))))))))))))))))))))))))))))))))))))),
-                    kansai = ifelse(grepl("大阪府", from) | 
-                                      grepl("京都府", from) | 
-                                      grepl("兵庫県", from) | 
-                                      grepl("滋賀県", from) | 
-                                      grepl("奈良県", from) | 
+                    kansai = ifelse(grepl("大阪府", from) |
+                                      grepl("京都府", from) |
+                                      grepl("兵庫県", from) |
+                                      grepl("滋賀県", from) |
+                                      grepl("奈良県", from) |
                                       grepl("和歌山県", from), 1, 0),
                     night = ifelse(grepl("夜の点数", score) & !grepl("昼の点数", score), 1, 0)) # 1 = evening experience
 
@@ -169,14 +169,14 @@ contents2 <- contents2[ ,c("shop_name", "tot_score", "kansai", "night", "gender"
 write.csv(contents2, file = "contents2.csv", row.names = FALSE)
 
 
-## morphological analysis
-library(dplyr); library(stringr)
-library(RMeCab); library(magrittr) # morphological analyzer library
-
-## save reviews into a text file
-write(contents$texts, file = "tabelog.txt")
-
-frq <- RMeCabFreq("tabelog.txt")
-
-frq %>% filter (Freq > 2, Info1 %in% c("名詞", "形容詞", "動詞")) -> frq2 # noun, adjective, verb
-frq2 %<>% filter(!Term %in% c("それ", "する", "いる" , "の", "なる", "よう", "ある", "円", "/", "_", "０", "、"))
+# ## morphological analysis
+# library(dplyr); library(stringr)
+# library(RMeCab); library(magrittr) # morphological analyzer library
+#
+# ## save reviews into a text file
+# write(contents$texts, file = "tabelog.txt")
+#
+# frq <- RMeCabFreq("tabelog.txt")
+#
+# frq %>% filter (Freq > 2, Info1 %in% c("名詞", "形容詞", "動詞")) -> frq2 # noun, adjective, verb
+# frq2 %<>% filter(!Term %in% c("それ", "する", "いる" , "の", "なる", "よう", "ある", "円", "/", "_", "０", "、"))

@@ -146,6 +146,7 @@ get_shopinfo_ja = function(shopURL) {
                 駐車場 = parking,
                 住所 = address,
                 TEL = tel,
-                オープン日 = birth_date
+                オープン日 = birth_date,
+                stringsAsFactors = F
         )
 }

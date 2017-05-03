@@ -17,6 +17,4 @@ a character vector of URLs of the given language.
 }
 \description{
 These URLs are sorted by the ratings of the restaurants in descending order.
-
-importFrom dplyr "%>%"
 }

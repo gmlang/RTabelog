@@ -3,8 +3,6 @@
 #' @description 
 #' These URLs are sorted by the ratings of the restaurants in descending order.
 #' 
-#' importFrom dplyr "%>%"
-#' 
 #' @param city string, lower cased city name in Japan.
 #' @param pages integer vector, for example, 1:60.
 #' @return a character vector of URLs.

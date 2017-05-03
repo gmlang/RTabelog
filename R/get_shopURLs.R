@@ -4,8 +4,6 @@
 #' @description 
 #' These URLs are sorted by the ratings of the restaurants in descending order.
 #' 
-#' @importFrom dplyr "%>%"
-#' 
 #' @param shopURLs_ja a character vector of the Japanese versioned URLs. 
 #' @param lang string of 4 possible values: "en", "cn", "tw", "kr".
 #' @return a character vector of URLs of the given language.

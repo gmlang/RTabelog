@@ -2,9 +2,7 @@
 % Please edit documentation in R/get_shopinfo_ja.R
 \name{get_shopinfo_ja}
 \alias{get_shopinfo_ja}
-\title{Scrape restaurant information (in Japanese) from a given Tabelog URL.
-
-importFrom dplyr "%>%"}
+\title{Scrape restaurant information (in Japanese) from a given Tabelog URL.}
 \usage{
 get_shopinfo_ja(shopURL)
 }

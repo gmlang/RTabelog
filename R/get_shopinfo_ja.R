@@ -1,10 +1,11 @@
 #' @title Scrape restaurant information (in Japanese) from a given Tabelog URL.
 #' 
-#' importFrom dplyr "%>%"
-#' 
 #' @param shopURL string, URL of restaurant, for example, 
 #'                "https://tabelog.com/kyoto/A2601/A260301/26002222/".
 #' @return a data frame of restaurant info in Japanese. 
+#' 
+#' @importFrom dplyr "%>%"
+#' 
 #' @export
 
 get_shopinfo_ja = function(shopURL) {

@@ -1,6 +1,16 @@
+#' @title Extracts URLs of restaurants (in Japanese) listed on tabelog for a given city.
+#' 
+#' @description 
+#' These URLs are sorted by the ratings of the restaurants in descending order.
+#' 
+#' importFrom dplyr "%>%"
+#' 
+#' @param city string, lower cased city name in Japan.
+#' @param pages integer vector, for example, 1:60.
+#' @return a character vector of URLs.
+#' @export
+
 get_shopURLs_ja = function(city = "osaka", pages = 1:60) {
-        # GETs and extracts URLs of restaurants (sorted by descending rating)
-        #       listed on x pages for the given city.
         # Returns a character vector of URLs of sites in Japanese.
         #
         # city: string, city name

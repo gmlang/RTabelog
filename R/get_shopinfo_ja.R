@@ -1,3 +1,12 @@
+#' @title Scrape restaurant information (in Japanese) from a given Tabelog URL.
+#' 
+#' importFrom dplyr "%>%"
+#' 
+#' @param shopURL string, URL of restaurant, for example, 
+#'                "https://tabelog.com/kyoto/A2601/A260301/26002222/".
+#' @return a data frame of restaurant info in Japanese. 
+#' @export
+
 get_shopinfo_ja = function(shopURL) {
         # shopURL = "https://tabelog.com/kyoto/A2601/A260301/26002222/"
         request = httr::RETRY("GET", url = shopURL)
@@ -6,6 +15,9 @@ get_shopinfo_ja = function(shopURL) {
                 stop("API did not return HTML", call. = FALSE)
         ids = xml2::read_html(request)
 
+        # pause a few seconds
+        Sys.sleep(2)
+        
         # extract name
         shop_name = rvest::html_nodes(ids, ".display-name") %>% 
                 rvest::html_text() %>% stringr::str_trim()

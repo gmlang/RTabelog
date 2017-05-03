@@ -9,11 +9,9 @@
 #' @export
 
 get_shopinfo_ja = function(shopURL) {
-        # shopURL = "https://tabelog.com/kyoto/A2601/A260301/26002222/"
+        # shopURL = shopURLs_ja[4]
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
-        if (httr::http_type(request) != "text/html")
-                stop("API did not return HTML", call. = FALSE)
         ids = xml2::read_html(request)
 
         # pause a few seconds
@@ -24,25 +22,29 @@ get_shopinfo_ja = function(shopURL) {
                 rvest::html_text() %>% stringr::str_trim()
         
         # extract ratings
-        rating = rvest::html_nodes(ids, ".rdheader-rating__score-val") %>% 
-                rvest::html_text() %>% stringr::str_trim() %>% as.numeric() %>% 
-                suppressWarnings()
+        rating = suppressWarnings(
+                rvest::html_nodes(ids, ".rdheader-rating__score-val") %>% 
+                rvest::html_text() %>% stringr::str_trim() %>% as.numeric() 
+                )
         rating_dinner = 
                 rvest::html_nodes(ids, ".rdheader-rating__time-icon--dinner") %>% 
                 rvest::html_text() 
-        rating_dinner = gsub("\n| |夜の点数：", "", rating_dinner) %>% 
-                as.numeric() %>% suppressWarnings()
+        rating_dinner = suppressWarnings(
+                gsub("\n| |夜の点数：", "", rating_dinner) %>% as.numeric()
+                )
         rating_lunch = 
                 rvest::html_nodes(ids, ".rdheader-rating__time-icon--lunch") %>% 
                 rvest::html_text()
-        rating_lunch = gsub("\n| |昼の点数：", "", rating_lunch) %>% 
-                as.numeric() %>% suppressWarnings()
+        rating_lunch = suppressWarnings(
+                gsub("\n| |昼の点数：", "", rating_lunch) %>% as.numeric()
+                )
         
         # extract number of reviews
         reviews = rvest::html_nodes(ids, ".rdheader-rating__review-target") %>% 
                 rvest::html_text()
-        reviews = gsub("\n| |口コミ|件", "", reviews) %>% as.integer() %>% 
-                suppressWarnings()
+        reviews = suppressWarnings(
+                gsub("\n| |口コミ|件", "", reviews) %>% as.integer() 
+                )
         
         # extract prices
         price_dinner = 

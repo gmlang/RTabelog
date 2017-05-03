@@ -11,4 +11,6 @@ check_request = function(request) {
         # if the request wasn't successful, stop
         if (request$status_code != 200)
                 stop("Tabelog crawling returned an error.\n")
+        if (httr::http_type(request) != "text/html")
+                stop("API did not return HTML", call. = FALSE)
 }

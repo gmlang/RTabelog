@@ -111,7 +111,8 @@ get_shopinfo_ja = function(shopURL) {
         # extract appropriate for what occasion
         all_occasions = 
                 "家族・子供と|デート|女子会|合コン|大人数の宴会|接待|一人で入りやすい|知人・友人と"
-        occasion = stringr::str_extract_all(elt4, all_occasions)[[1]]
+        occasion = paste(stringr::str_extract_all(elt4, all_occasions)[[1]],
+                         collapse = " | ")
         
         # fill in NA if info not available
         if (length(shop_name)==0) shop_name = NA_character_

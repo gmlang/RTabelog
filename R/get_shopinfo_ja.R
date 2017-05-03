@@ -25,26 +25,29 @@ get_shopinfo_ja = function(shopURL) {
         
         # extract ratings
         rating = rvest::html_nodes(ids, ".rdheader-rating__score-val") %>% 
-                rvest::html_text() %>% stringr::str_trim() %>% as.numeric()
+                rvest::html_text() %>% stringr::str_trim() %>% as.numeric() %>% 
+                suppressWarnings()
         rating_dinner = 
                 rvest::html_nodes(ids, ".rdheader-rating__time-icon--dinner") %>% 
                 rvest::html_text() 
         rating_dinner = gsub("\n| |夜の点数：", "", rating_dinner) %>% 
-                as.numeric()
+                as.numeric() %>% suppressWarnings()
         rating_lunch = 
                 rvest::html_nodes(ids, ".rdheader-rating__time-icon--lunch") %>% 
                 rvest::html_text()
-        rating_lunch = gsub("\n| |昼の点数：", "", rating_lunch) %>% as.numeric()
+        rating_lunch = gsub("\n| |昼の点数：", "", rating_lunch) %>% 
+                as.numeric() %>% suppressWarnings()
         
         # extract number of reviews
         reviews = rvest::html_nodes(ids, ".rdheader-rating__review-target") %>% 
                 rvest::html_text()
-        reviews = gsub("\n| |口コミ|件", "", reviews) %>% as.integer()
+        reviews = gsub("\n| |口コミ|件", "", reviews) %>% as.integer() %>% 
+                suppressWarnings()
         
         # extract prices
         price_dinner = 
                 rvest::html_nodes(ids, ".rdheader-budget__icon--dinner") %>% 
-                rvest::html_text ()
+                rvest::html_text()
         price_dinner = 
                 gsub("￥", "¥", gsub("～", " - ", 
                                     gsub("\n| |夜の予算", "", price_dinner)))

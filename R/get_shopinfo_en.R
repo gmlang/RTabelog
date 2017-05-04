@@ -9,7 +9,7 @@
 #' @export
 
 get_shopinfo_en = function(shopURL) {
-        # shopURL = "https://tabelog.com/en/osaka/A2701/A270108/27073813/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
+        # shopURL = "https://tabelog.com/en/osaka/A2701/A270102/27085978/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
         ids = xml2::read_html(request)
@@ -23,15 +23,19 @@ get_shopinfo_en = function(shopURL) {
         # shop name
         shop_name = extract(".rd-detail-info__rst-name") %>%
                 gsub(pattern = "\\s+", replace = " ")
+        if (length(shop_name) == 0) shop_name = NA
 
         # prices
         prices = extract(".rd-header__info-table .c-rating__val")
-        price_dinner = ifelse(length(prices)==0, NA_character_, prices[1])
-        price_lunch = ifelse(length(prices)==2, prices[2], NA_character_)
+        price_dinner = ifelse(length(prices)==0, NA, prices[1])
+        price_lunch = ifelse(length(prices)==2, prices[2], NA)
+        if (length(price_dinner) == 0) price_dinner = NA
+        if (length(price_lunch) == 0) price_lunch = NA
 
         # phone number
         tel = extract(".rd-detail-info__rst-tel") %>%
                 gsub(pattern="\n.*", replace="") %>% dplyr::first()
+        if (length(tel) == 0) tel = NA
 
         # ratings
         ratings = suppressWarnings(
@@ -40,6 +44,8 @@ get_shopinfo_en = function(shopURL) {
         rating = ratings[1]
         rating_dinner = ratings[2]
         rating_lunch = ratings[3]
+        if (length(rating_dinner) == 0) rating_dinner = NA
+        if (length(rating_lunch) == 0) rating_lunch = NA
 
         # number of reviews
         reviews = suppressWarnings(
@@ -47,18 +53,20 @@ get_shopinfo_en = function(shopURL) {
                         gsub(pattern="\n| |reviews", replace="") %>%
                         as.integer()
                 )
+        if (length(reviews) == 0) reviews = NA
 
         # address
         address = extract(".rd-detail-info__rst-address")
         address_en = address[1]
         address_ja = gsub("\n| ", "", address[2])
         address = paste(address_en, paste0("(", address_ja, ")"))
+        if (length(address) == 0) address = NA
 
         # take reservations
         reservation = ifelse(
                 extract(".rd-detail-info__rst-booking-status") == "予約可",
                 "Yes", "No")
-
+        if (length(reservation) == 0) reservation = NA
 
         ##----- table of detailed info -- very important ---- ##
         tbl_head = extract(".rd-detail-info th")

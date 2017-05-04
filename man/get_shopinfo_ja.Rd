@@ -7,7 +7,7 @@
 get_shopinfo_ja(shopURL)
 }
 \arguments{
-\item{shopURL}{string, URL of restaurant, for example, 
+\item{shopURL}{string, URL of restaurant, for example,
 "https://tabelog.com/kyoto/A2601/A260301/26002222/".}
 }
 \value{

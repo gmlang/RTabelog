@@ -81,18 +81,18 @@ get_shopinfo_en = function(shopURL) {
         private = rvest::html_nodes(ids, "tr:nth-child(2) b") %>%
                 rvest::html_text() %>% stringr::str_trim()
 
-        # smoking
-        smoking = rvest::html_nodes(ids, "tr:nth-child(4) b") %>%
-                rvest::html_text() %>% gsub(pattern=" establishment", replace="")
-
-        # parking
-        parking = rvest::html_nodes(ids, "tr:nth-child(5) b") %>%
-                rvest::html_text()
-
-        # good for what occasions
-        occasion = rvest::html_nodes(ids, "section:nth-child(6) tr:nth-child(1) p:nth-child(1)") %>%
-                rvest::html_text() %>% stringr::str_trim() %>%
-                gsub(pattern = ",", replace=", ")
+        # # smoking
+        # smoking = rvest::html_nodes(ids, "tr:nth-child(4) b") %>%
+        #         rvest::html_text() %>% gsub(pattern=" establishment", replace="")
+        #
+        # # parking
+        # parking = rvest::html_nodes(ids, "tr:nth-child(5) b") %>%
+        #         rvest::html_text()
+        #
+        # # good for what occasions
+        # occasion = rvest::html_nodes(ids, "section:nth-child(6) tr:nth-child(1) p:nth-child(1)") %>%
+        #         rvest::html_text() %>% stringr::str_trim() %>%
+        #         gsub(pattern = ",", replace=", ")
 
         # restaurant website
         website = rvest::html_nodes(ids, ".rd-detail-info__target-blank a") %>%
@@ -112,33 +112,26 @@ get_shopinfo_en = function(shopURL) {
         if (length(cards)==0) cards = NA_character_
         if (length(hours)==0) cards = NA_character_
         if (length(private)==0) private = NA_character_
-        if (length(smoking)==0) smoking = NA_character_
-        if (length(parking)==0) parking = NA_character_
-        if (length(occasion)==0) occasion = NA_character_
+        # if (length(smoking)==0) smoking = NA_character_
+        # if (length(parking)==0) parking = NA_character_
+        # if (length(occasion)==0) occasion = NA_character_
         if (length(website)==0) website = NA_character_
         if (length(nearby)==0) nearby = NA_character_
 
         # collect into a data frame and return
         out = data.frame(shop_name, cuisine, rating_dinner, rating_lunch,
                          reviews, price_dinner, price_lunch,
-                         occasion,
-                         nearby,
-                         hours,
-                         cards,
-                         private, smoking, parking,
-                         address, tel,
-                         website,
-                         shopURL,
+                         # occasion,
+                         nearby, hours, cards, private,
+                         # smoking, parking,
+                         address, tel, website, shopURL,
                          stringsAsFactors = F)
         names(out) = c("Restaurant Name", "Cuisine", "Dinner Rating",
                        "Lunch Rating", "Reviews", "Dinner Price", "Lunch Price",
-                       "Good for",
-                       "Nearest Station",
-                       "Hours",
-                       "Accept Credit Cards",
-                       "Private Room", "Smoking", "Parking",
-                       "Address", "Tel",
-                       "Restaurant Website",
-                       "View on Tabelog")
+                       # "Good for",
+                       "Nearest Station", "Hours", "Accept Credit Cards",
+                       "Private Room",
+                       # "Smoking", "Parking",
+                       "Address", "Tel", "Restaurant Website", "View on Tabelog")
         out
 }

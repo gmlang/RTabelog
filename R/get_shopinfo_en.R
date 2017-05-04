@@ -76,7 +76,10 @@ get_shopinfo_en = function(shopURL) {
 
         # credit cards
         cards = rvest::html_nodes(ids, ".c-display-guide+ section tr:nth-child(9) p") %>%
-                rvest::html_text() %>% gsub(pattern = ".*\\(|\\).*", replace="")
+                rvest::html_text() %>%
+                gsub(pattern = ".*\\(|\\).*", replace="") %>%
+                stringr::str_trim()
+
 
         # # extract seats info
         # private = gsub(".*Private dining rooms(.*)Private use.*", "\\1", seats) %>%

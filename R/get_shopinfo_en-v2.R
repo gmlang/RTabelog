@@ -8,8 +8,8 @@
 #'
 #' @export
 
-get_shopinfo_en = function(shopURL) {
-        # shopURL = "https://tabelog.com/en/kyoto/A2601/A260301/26002222/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
+get_shopinfo_en2 = function(shopURL) {
+        # shopURL = "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
         ids = xml2::read_html(request)
@@ -17,15 +17,7 @@ get_shopinfo_en = function(shopURL) {
         # pause a few seconds
         Sys.sleep(2)
 
-        # shop name
-        shop_name = rvest::html_nodes(ids, ".rd-header__rst-name-main") %>%
-                rvest::html_text() %>% stringr::str_trim()
-
-        # cuisine
-        cuisine = rvest::html_nodes(ids, ".c-display-guide+ section tr:nth-child(2) p") %>%
-                rvest::html_text() %>% stringr::str_trim()
-
-        # ratings
+        # extract ratings
         ratings = suppressWarnings(
                 rvest::html_nodes(ids, ".rd-header__rst-rate .c-rating__val") %>%
                         rvest::html_text() %>% stringr::str_trim() %>%
@@ -35,7 +27,7 @@ get_shopinfo_en = function(shopURL) {
         rating_dinner = ratings[2]
         rating_lunch = ratings[3]
 
-        # number of reviews
+        # extract number of reviews
         reviews = suppressWarnings(
                 rvest::html_nodes(ids, ".rd-header__rst-reviews-target") %>%
                         rvest::html_text() %>%
@@ -43,38 +35,43 @@ get_shopinfo_en = function(shopURL) {
                         as.integer()
                 )
 
-        # prices
+        # extract prices
         prices = rvest::html_nodes(ids, ".rd-header__info-table .c-rating__val") %>%
                 rvest::html_text()
         price_dinner = prices[1]
         price_lunch = ifelse(length(prices)==2, prices[2], NA_character_)
 
-        # phone number
-        tel = rvest::html_nodes(ids, "#anchor-rd-detail strong") %>%
-                rvest::html_text() %>% stringr::str_trim() %>%
-                gsub(pattern="\\s+", replace=" ")
+        # extract detailed info table
+        tbl = rvest::html_nodes(ids, ".rd-detail-info") %>% rvest::html_text()
+        basic = tbl[1]
+        seats = tbl[2]
+        menu  = tbl[3]
+        other = tbl[4]
 
-        # address
-        address = rvest::html_nodes(ids, ".rd-detail-info__rst-address") %>%
-                rvest::html_text()
-        address_en = address[1] %>% stringr::str_trim()
-        address_ja = gsub("\n| ", "", gsub(".*[a-zA-Z]+", "", address[2]))
+        # extract basic shop info
+        shop_name = gsub(".*Restaurant name(.*)Categories.*", "\\1", basic) %>%
+                stringr::str_trim() %>% gsub(pattern = "\n *", replacement=" ")
+        cuisine = gsub(".*Categories(.*)TEL.*", "\\1", basic) %>%
+                stringr::str_trim()
+        tel = gsub(".*TEL/reservation(.*)Addresses.*", "\\1", basic) %>%
+                stringr::str_trim() %>%
+                stringr::str_extract(pattern="[0-9]+-[0-9]+-[0-9]+")
+        address = gsub(".*Addresses(.*)Show larger map.*", "\\1", basic) %>%
+                stringr::str_trim()
+        address_en = gsub("(.*[a-zA-Z]+).*", "\\1", address)
+        address_ja = gsub("\n| ", "", gsub(".*[a-zA-Z]+", "", address))
         address = paste(address_en, paste0("(", address_ja, ")"))
-
-        # nearest station
-        nearby = rvest::html_nodes(ids, ".translate+ p") %>%
-                rvest::html_text() %>% gsub(pattern = ".*from |\\.$", replace="")
-
+        nearby = gsub(".*Transportation(.*)Operating Hours.*", "\\1", basic) %>%
+                stringr::str_trim() %>%
+                stringr::str_extract(pattern = "[0-9a-zA-Z| ]+") %>%
+                stringr::str_trim() %>% gsub(pattern = ".*from ", replace="")
         # hours = gsub(".*Operating Hours(.*)Shop holidays.*", "\\1", basic) %>%
         #         gsub(pattern = "□■.*", replace = "") %>%
         #         stringr::str_trim()
         # hours = paste(substr(hours, 1, 11), substr(hours, 12, nchar(hours)),
         #               sep=" | ")
-
-
-        # credit cards
-        cards = rvest::html_nodes(ids, "tr:nth-child(9) p") %>%
-                rvest::html_text() %>% gsub(pattern = ".*\\(|\\).*", replace="")
+        cards = gsub(".*Cards(.*)", "\\1", basic) %>%
+                gsub(pattern = ".*\\(|\\).*", replace="")
 
         # # extract seats info
         # private = gsub(".*Private dining rooms(.*)Private use.*", "\\1", seats) %>%

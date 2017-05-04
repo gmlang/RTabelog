@@ -3,5 +3,6 @@
 export(get_shopURLs)
 export(get_shopURLs_ja)
 export(get_shopinfo_en)
+export(get_shopinfo_en2)
 export(get_shopinfo_ja)
 importFrom(dplyr,"%>%")

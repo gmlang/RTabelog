@@ -9,7 +9,7 @@
 #' @export
 
 get_shopinfo_en = function(shopURL) {
-        # shopURL = "https://tabelog.com/en/kyoto/A2601/A260301/26002222/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
+        # shopURL = "https://tabelog.com/en/osaka/A2701/A270102/27015488/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
         ids = xml2::read_html(request)
@@ -112,7 +112,8 @@ get_shopinfo_en = function(shopURL) {
         pos = which(tbl_head == "Parking lot")
         parking = ifelse(length(pos) == 0, NA_character_,
                          tbl_content %>% magrittr::extract2(pos) %>%
-                                 rvest::html_text(trim=T))
+                                 rvest::html_text(trim=T) %>%
+                                 gsub(pattern="\n.*", replace=""))
 
         # unique location/setup
         pos = which(tbl_head == "Location")

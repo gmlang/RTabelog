@@ -9,7 +9,7 @@
 #' @export
 
 get_shopinfo_en = function(shopURL) {
-        # shopURL = "https://tabelog.com/en/osaka/A2701/A270102/27015488/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
+        # shopURL = "https://tabelog.com/en/osaka/A2701/A270108/27073813/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
         ids = xml2::read_html(request)
@@ -31,7 +31,7 @@ get_shopinfo_en = function(shopURL) {
 
         # phone number
         tel = extract(".rd-detail-info__rst-tel") %>%
-                gsub(pattern="\n.*", replace="")
+                gsub(pattern="\n.*", replace="") %>% dplyr::first()
 
         # ratings
         ratings = suppressWarnings(

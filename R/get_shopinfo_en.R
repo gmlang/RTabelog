@@ -9,7 +9,7 @@
 #' @export
 
 get_shopinfo_en = function(shopURL) {
-        # shopURL = "https://tabelog.com/en/kyoto/A2601/A260301/26002222/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
+        # shopURL = "https://tabelog.com/en/osaka/A2701/A270102/27015488/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
         ids = xml2::read_html(request)
@@ -58,12 +58,14 @@ get_shopinfo_en = function(shopURL) {
         address = rvest::html_nodes(ids, ".rd-detail-info__rst-address") %>%
                 rvest::html_text()
         address_en = address[1] %>% stringr::str_trim()
-        address_ja = gsub("\n| ", "", gsub(".*[a-zA-Z]+", "", address[2]))
+        address_ja = gsub("\n| ", "", address[2])
         address = paste(address_en, paste0("(", address_ja, ")"))
 
         # nearest station
-        nearby = rvest::html_nodes(ids, ".translate+ p") %>%
-                rvest::html_text() %>% gsub(pattern = ".*from |\\.$", replace="")
+        nearby = rvest::html_nodes(ids, "dl:nth-child(1) dd") %>%
+                rvest::html_text() %>%
+                stringr::str_extract(pattern="\\s+\\w+\n") %>%
+                stringr::str_trim()
 
         # hours = gsub(".*Operating Hours(.*)Shop holidays.*", "\\1", basic) %>%
         #         gsub(pattern = "□■.*", replace = "") %>%
@@ -73,7 +75,7 @@ get_shopinfo_en = function(shopURL) {
 
 
         # credit cards
-        cards = rvest::html_nodes(ids, "tr:nth-child(9) p") %>%
+        cards = rvest::html_nodes(ids, ".c-display-guide+ section tr:nth-child(9) p") %>%
                 rvest::html_text() %>% gsub(pattern = ".*\\(|\\).*", replace="")
 
         # # extract seats info

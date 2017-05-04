@@ -9,7 +9,7 @@
 #' @export
 
 get_shopinfo_en = function(shopURL) {
-        # shopURL = "https://tabelog.com/en/kyoto/A2601/A260301/26006250/"
+        # shopURL = "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
         ids = xml2::read_html(request)
@@ -65,31 +65,31 @@ get_shopinfo_en = function(shopURL) {
                 stringr::str_trim() %>%
                 stringr::str_extract(pattern = "[0-9a-zA-Z| ]+") %>%
                 stringr::str_trim() %>% gsub(pattern = ".*from ", replace="")
-        hours = gsub(".*Operating Hours(.*)Shop holidays.*", "\\1", basic) %>%
-                gsub(pattern = "□■.*", replace = "") %>%
-                stringr::str_trim()
-        hours = paste(substr(hours, 1, 11), substr(hours, 12, nchar(hours)),
-                      sep=" | ")
+        # hours = gsub(".*Operating Hours(.*)Shop holidays.*", "\\1", basic) %>%
+        #         gsub(pattern = "□■.*", replace = "") %>%
+        #         stringr::str_trim()
+        # hours = paste(substr(hours, 1, 11), substr(hours, 12, nchar(hours)),
+        #               sep=" | ")
         cards = gsub(".*Cards(.*)", "\\1", basic) %>%
                 gsub(pattern = ".*\\(|\\).*", replace="")
 
-        # extract seats info
-        private = gsub(".*Private dining rooms(.*)Private use.*", "\\1", seats) %>%
-                stringr::str_trim()
-        private = gsub(".*Private dining rooms(.*)Private use.*", "\\1", seats) %>%
-                stringr::str_trim()
-        smoking = gsub(".*Non-smoking/smoking(.*)Parking lot.*", "\\1", seats) %>%
-                stringr::str_trim() %>% gsub(pattern=" establishment", replace="")
-        parking = gsub(".*Parking lot(.*)Space/facilities.*", "\\1", seats) %>%
-                gsub(pattern="[^a-zA-Z]", replace="")
+        # # extract seats info
+        # private = gsub(".*Private dining rooms(.*)Private use.*", "\\1", seats) %>%
+        #         stringr::str_trim()
+        # private = gsub(".*Private dining rooms(.*)Private use.*", "\\1", seats) %>%
+        #         stringr::str_trim()
+        # smoking = gsub(".*Non-smoking/smoking(.*)Parking lot.*", "\\1", seats) %>%
+        #         stringr::str_trim() %>% gsub(pattern=" establishment", replace="")
+        # parking = gsub(".*Parking lot(.*)Space/facilities.*", "\\1", seats) %>%
+        #         gsub(pattern="[^a-zA-Z]", replace="")
 
-        # extract other info
-        occasion = gsub(".*Occasion(.*)Location.*", "\\1", other) %>%
-                stringr::str_trim() %>% gsub(pattern=" *\n.*", replace="")
-        website = gsub(".*The homepage(.*)The opening day.*", "\\1", other) %>%
-                stringr::str_trim()
-        open_date = gsub(".*The opening day(.*)First reviewer.*", "\\1", other) %>%
-                stringr::str_trim()
+        # # extract other info
+        # occasion = gsub(".*Occasion(.*)Location.*", "\\1", other) %>%
+        #         stringr::str_trim() %>% gsub(pattern=" *\n.*", replace="")
+        # website = gsub(".*The homepage(.*)The opening day.*", "\\1", other) %>%
+        #         stringr::str_trim()
+        # open_date = gsub(".*The opening day(.*)First reviewer.*", "\\1", other) %>%
+        #         stringr::str_trim()
 
         # fill in NA if info not available
         if (length(shop_name)==0) shop_name = NA_character_
@@ -103,24 +103,35 @@ get_shopinfo_en = function(shopURL) {
         if (length(address)==0) address = NA_character_
         if (length(cuisine)==0) cuisine = NA_character_
         if (length(cards)==0) cards = NA_character_
-        if (length(private)==0) private = NA_character_
-        if (length(smoking)==0) smoking = NA_character_
-        if (length(parking)==0) parking = NA_character_
-        if (length(occasion)==0) occasion = NA_character_
-        if (length(website)==0) website = NA_character_
-        if (length(open_date)==0) open_date = NA_character_
+        # if (length(private)==0) private = NA_character_
+        # if (length(smoking)==0) smoking = NA_character_
+        # if (length(parking)==0) parking = NA_character_
+        # if (length(occasion)==0) occasion = NA_character_
+        # if (length(website)==0) website = NA_character_
+        # if (length(open_date)==0) open_date = NA_character_
         if (length(nearby)==0) nearby = NA_character_
 
         # collect into a data frame and return
         out = data.frame(shop_name, cuisine, rating_dinner, rating_lunch,
-                         reviews, price_dinner, price_lunch, occasion, nearby,
-                         hours, cards, private, smoking, parking, address, tel,
-                         open_date, website, shopURL, stringsAsFactors = F)
+                         reviews, price_dinner, price_lunch,
+                         # occasion,
+                         nearby,
+                         # hours,
+                         cards,
+                         # private, smoking, parking,
+                         address, tel,
+                         # open_date, website,
+                         shopURL,
+                         stringsAsFactors = F)
         names(out) = c("Restaurant Name", "Cuisine", "Dinner Rating",
-                       "Lunch Rating", "Reviews", "Dinner Price",
-                       "Lunch Price", "Good for", "Nearest Station", "Hours",
-                       "Accept Credit Cards", "Private Room", "Smoking",
-                       "Parking", "Address", "Tel", "Opened Since",
-                       "Restaurant Website", "View on Tabelog")
+                       "Lunch Rating", "Reviews", "Dinner Price", "Lunch Price",
+                       # "Good for",
+                       "Nearest Station",
+                       # "Hours",
+                       "Accept Credit Cards",
+                       # "Private Room", "Smoking", "Parking",
+                       "Address", "Tel",
+                       # "Opened Since", "Restaurant Website",
+                       "View on Tabelog")
         out
 }

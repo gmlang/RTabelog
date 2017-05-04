@@ -77,10 +77,10 @@ get_shopinfo_en = function(shopURL) {
                 gsub(pattern = ".*\\(|\\).*", replace="") %>%
                 stringr::str_trim()
 
-        # private room
-        private = rvest::html_nodes(ids, "tr:nth-child(2) b") %>%
-                rvest::html_text() %>% stringr::str_trim()
-
+        # # private room
+        # private = rvest::html_nodes(ids, "tr:nth-child(2) b") %>%
+        #         rvest::html_text() %>% stringr::str_trim()
+        #
         # # smoking
         # smoking = rvest::html_nodes(ids, "tr:nth-child(4) b") %>%
         #         rvest::html_text() %>% gsub(pattern=" establishment", replace="")
@@ -111,7 +111,7 @@ get_shopinfo_en = function(shopURL) {
         if (length(cuisine)==0) cuisine = NA_character_
         if (length(cards)==0) cards = NA_character_
         if (length(hours)==0) cards = NA_character_
-        if (length(private)==0) private = NA_character_
+        # if (length(private)==0) private = NA_character_
         # if (length(smoking)==0) smoking = NA_character_
         # if (length(parking)==0) parking = NA_character_
         # if (length(occasion)==0) occasion = NA_character_
@@ -122,16 +122,15 @@ get_shopinfo_en = function(shopURL) {
         out = data.frame(shop_name, cuisine, rating_dinner, rating_lunch,
                          reviews, price_dinner, price_lunch,
                          # occasion,
-                         nearby, hours, cards, private,
-                         # smoking, parking,
+                         nearby, hours, cards,
+                         # private, smoking, parking,
                          address, tel, website, shopURL,
                          stringsAsFactors = F)
         names(out) = c("Restaurant Name", "Cuisine", "Dinner Rating",
                        "Lunch Rating", "Reviews", "Dinner Price", "Lunch Price",
                        # "Good for",
                        "Nearest Station", "Hours", "Accept Credit Cards",
-                       "Private Room",
-                       # "Smoking", "Parking",
+                       # "Private Room", "Smoking", "Parking",
                        "Address", "Tel", "Restaurant Website", "View on Tabelog")
         out
 }

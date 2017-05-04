@@ -10,5 +10,6 @@ LazyData: true
 Imports: httr,
     xml2,
     rvest,
-    dplyr
+    dplyr,
+    magrittr
 RoxygenNote: 6.0.1

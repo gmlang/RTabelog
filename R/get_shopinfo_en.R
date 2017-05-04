@@ -9,7 +9,7 @@
 #' @export
 
 get_shopinfo_en = function(shopURL) {
-        # shopURL = "https://tabelog.com/en/osaka/A2701/A270102/27015488/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
+        # shopURL = "https://tabelog.com/en/kyoto/A2601/A260301/26002222/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
         ids = xml2::read_html(request)
@@ -67,12 +67,9 @@ get_shopinfo_en = function(shopURL) {
                 stringr::str_extract(pattern="\\s+\\w+\n") %>%
                 stringr::str_trim()
 
-        # hours = gsub(".*Operating Hours(.*)Shop holidays.*", "\\1", basic) %>%
-        #         gsub(pattern = "□■.*", replace = "") %>%
-        #         stringr::str_trim()
-        # hours = paste(substr(hours, 1, 11), substr(hours, 12, nchar(hours)),
-        #               sep=" | ")
-
+        # business hours
+        hours = rvest::html_nodes(ids, ".c-display-guide+ section tr:nth-child(6) .translate") %>%
+                rvest::html_text() %>% stringr::str_trim()
 
         # credit cards
         cards = rvest::html_nodes(ids, ".c-display-guide+ section tr:nth-child(9) p") %>%
@@ -80,24 +77,26 @@ get_shopinfo_en = function(shopURL) {
                 gsub(pattern = ".*\\(|\\).*", replace="") %>%
                 stringr::str_trim()
 
+        # private room
+        private = rvest::html_nodes(ids, "tr:nth-child(2) b") %>%
+                rvest::html_text() %>% stringr::str_trim()
 
-        # # extract seats info
-        # private = gsub(".*Private dining rooms(.*)Private use.*", "\\1", seats) %>%
-        #         stringr::str_trim()
-        # private = gsub(".*Private dining rooms(.*)Private use.*", "\\1", seats) %>%
-        #         stringr::str_trim()
-        # smoking = gsub(".*Non-smoking/smoking(.*)Parking lot.*", "\\1", seats) %>%
-        #         stringr::str_trim() %>% gsub(pattern=" establishment", replace="")
-        # parking = gsub(".*Parking lot(.*)Space/facilities.*", "\\1", seats) %>%
-        #         gsub(pattern="[^a-zA-Z]", replace="")
+        # smoking
+        smoking = rvest::html_nodes(ids, "tr:nth-child(4) b") %>%
+                rvest::html_text() %>% gsub(pattern=" establishment", replace="")
 
-        # # extract other info
-        # occasion = gsub(".*Occasion(.*)Location.*", "\\1", other) %>%
-        #         stringr::str_trim() %>% gsub(pattern=" *\n.*", replace="")
-        # website = gsub(".*The homepage(.*)The opening day.*", "\\1", other) %>%
-        #         stringr::str_trim()
-        # open_date = gsub(".*The opening day(.*)First reviewer.*", "\\1", other) %>%
-        #         stringr::str_trim()
+        # parking
+        parking = rvest::html_nodes(ids, "tr:nth-child(5) b") %>%
+                rvest::html_text()
+
+        # good for what occasions
+        occasion = rvest::html_nodes(ids, "section:nth-child(6) tr:nth-child(1) p:nth-child(1)") %>%
+                rvest::html_text() %>% stringr::str_trim() %>%
+                gsub(pattern = ",", replace=", ")
+
+        # restaurant website
+        website = rvest::html_nodes(ids, ".rd-detail-info__target-blank a") %>%
+                rvest::html_text() %>% stringr::str_trim()
 
         # fill in NA if info not available
         if (length(shop_name)==0) shop_name = NA_character_
@@ -111,35 +110,35 @@ get_shopinfo_en = function(shopURL) {
         if (length(address)==0) address = NA_character_
         if (length(cuisine)==0) cuisine = NA_character_
         if (length(cards)==0) cards = NA_character_
-        # if (length(private)==0) private = NA_character_
-        # if (length(smoking)==0) smoking = NA_character_
-        # if (length(parking)==0) parking = NA_character_
-        # if (length(occasion)==0) occasion = NA_character_
-        # if (length(website)==0) website = NA_character_
-        # if (length(open_date)==0) open_date = NA_character_
+        if (length(hours)==0) cards = NA_character_
+        if (length(private)==0) private = NA_character_
+        if (length(smoking)==0) smoking = NA_character_
+        if (length(parking)==0) parking = NA_character_
+        if (length(occasion)==0) occasion = NA_character_
+        if (length(website)==0) website = NA_character_
         if (length(nearby)==0) nearby = NA_character_
 
         # collect into a data frame and return
         out = data.frame(shop_name, cuisine, rating_dinner, rating_lunch,
                          reviews, price_dinner, price_lunch,
-                         # occasion,
+                         occasion,
                          nearby,
-                         # hours,
+                         hours,
                          cards,
-                         # private, smoking, parking,
+                         private, smoking, parking,
                          address, tel,
-                         # open_date, website,
+                         website,
                          shopURL,
                          stringsAsFactors = F)
         names(out) = c("Restaurant Name", "Cuisine", "Dinner Rating",
                        "Lunch Rating", "Reviews", "Dinner Price", "Lunch Price",
-                       # "Good for",
+                       "Good for",
                        "Nearest Station",
-                       # "Hours",
+                       "Hours",
                        "Accept Credit Cards",
-                       # "Private Room", "Smoking", "Parking",
+                       "Private Room", "Smoking", "Parking",
                        "Address", "Tel",
-                       # "Opened Since", "Restaurant Website",
+                       "Restaurant Website",
                        "View on Tabelog")
         out
 }

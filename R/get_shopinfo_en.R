@@ -9,7 +9,7 @@
 #' @export
 
 get_shopinfo_en = function(shopURL) {
-        # shopURL = "https://tabelog.com/en/osaka/A2701/A270102/27085978/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
+        # shopURL = "https://tabelog.com/en/aichi/A2301/A230105/23033296/" # "https://tabelog.com/en/osaka/A2701/A270202/27001286/"
         request = httr::RETRY("GET", url = shopURL)
         check_request(request)
         ids = xml2::read_html(request)
@@ -106,7 +106,8 @@ get_shopinfo_en = function(shopURL) {
         private = ifelse(length(pos) == 0, NA_character_,
                          tbl_content %>% magrittr::extract2(pos) %>%
                                  rvest::html_text(trim=T) %>%
-                                 gsub(pattern="\n *", replace=". "))
+                                 stringr::str_extract("[^\n]*\n?[^\n]*") %>%
+                                 gsub(pattern = "\n *", replace=", "))
 
         # smoking
         pos = which(tbl_head == "Non-smoking/smoking")
